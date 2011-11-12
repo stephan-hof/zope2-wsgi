@@ -1,0 +1,13 @@
+Index: ZPublisher/WSGIPublisher.py
+===================================================================
+--- ZPublisher/WSGIPublisher.py	(revision 123333)
++++ ZPublisher/WSGIPublisher.py	(working copy)
+@@ -238,7 +238,7 @@
+     stderr = StringIO()
+     response = _response_factory(stdout=stdout, stderr=stderr)
+     response._http_version = environ['SERVER_PROTOCOL'].split('/')[1]
+-    response._http_connection = environ.get('CONNECTION_TYPE', 'close')
++    response._http_connection = environ.get('HTTP_CONNECTION', None)
+     response._server_version = environ.get('SERVER_SOFTWARE')
+ 
+     request = _request_factory(environ['wsgi.input'], environ, response)
