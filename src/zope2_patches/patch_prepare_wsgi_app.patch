@@ -1,0 +1,36 @@
+Index: Zope2/Startup/run.py
+===================================================================
+--- Zope2/Startup/run.py	(revision 123333)
++++ Zope2/Startup/run.py	(working copy)
+@@ -65,7 +65,7 @@
+     handleConfig(opts.configroot, opts.confighandlers)
+     setConfiguration(opts.configroot)
+     starter.setConfiguration(opts.configroot)
+-    starter.prepare()
++    starter.prepare_wsgi_app()
+     return publish_module
+ 
+ if __name__ == '__main__':
+Index: Zope2/Startup/__init__.py
+===================================================================
+--- Zope2/Startup/__init__.py	(revision 123333)
++++ Zope2/Startup/__init__.py	(working copy)
+@@ -67,6 +67,18 @@
+     def sendEvents(self):
+         notify(ProcessStarting())
+ 
++    def prepare_wsgi_app(self):
++        self.setupLocale()
++        self.setupSecurityOptions()
++        self.setupPublisher()
++        self.setupInterpreter()
++        self.startZope()
++        # emit a "ready" message in order to prevent the kinds of emails
++        # to the Zope maillist in which people claim that Zope has "frozen"
++        # after it has emitted ZServer messages.
++        logger.info('Ready to handle requests')
++        self.sendEvents()
++
+     def prepare(self):
+         self.setupInitialLogging()
+         self.setupLocale()
